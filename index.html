@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chord Analyzer (Major)</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0b0f19" />
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; margin: 1rem; max-width: 800px }
+    header { display:flex; align-items:center; gap:.75rem; margin-bottom:1rem }
+    textarea { width:100%; min-height:120px }
+    .row { display:grid; grid-template-columns: 120px 1fr; gap:.5rem; margin:.25rem 0 }
+    .card { border:1px solid #e3e6ef; border-radius:12px; padding:1rem; margin:1rem 0 }
+    h2 { margin:.25rem 0 }
+    code { background:#f6f8ff; padding:.1rem .3rem; border-radius:6px }
+    button { padding:.6rem 1rem; border-radius:8px; border:1px solid #c9d1e6; background:#fff; }
+    button:active { transform: translateY(1px); }
+    input, select { padding:.5rem .6rem; border:1px solid #c9d1e6; border-radius:8px; width:100% }
+    .grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(140px,1fr)); gap:.5rem }
+    .badge { display:inline-block; padding:.25rem .5rem; border:1px solid #d4d9ea; border-radius:999px; font-size:.9rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Chord Analyzer (Major)</h1>
+  </header>
+
+  <div class="card">
+    <h2>Key</h2>
+    <div class="row">
+      <label for="key">Key (must exist in headers):</label>
+      <input id="key" placeholder="C, G, F#, Bb, …" value="C" />
+    </div>
+    <div class="row">
+      <label>CA table (paste or keep demo):<br><small>Headers on first line; rows like your “Chords Analyzer” sheet.</small></label>
+      <textarea id="caInput" spellcheck="false"></textarea>
+    </div>
+    <div class="row">
+      <label></label>
+      <button id="runBtn">Run</button>
+    </div>
+  </div>
+
+  <div id="results" class="card" style="display:none"></div>
+
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./service-worker.js');
+    }
+  </script>
+</body>
+</html>

@@ -1,45 +1,36 @@
-// --- Utility: capture the leading note token: A–G with optional # or b (case-insensitive)
+// ---------- helpers ----------
 function rootToken(s) {
   if (!s) return "";
   const m = String(s).trim().match(/^[A-Ga-g](?:#|b)?/);
   return m ? m[0].toUpperCase() : "";
 }
-
-// Parse a TSV/CSV-ish block where first line is headers.
-// We expect a header row like the CA sheet's row 4 (D:O), including your chosen key (e.g., "C", "G", "Bb"...)
 function parseTable(text) {
   const lines = text.trim().split(/\r?\n/).filter(Boolean);
   if (!lines.length) return { headers: [], rows: [] };
-
   const split = (line) => line.split(/\t|,|;/).map(x => x.trim());
-  const headers = split(lines[0]); // columns
-  const rows = lines.slice(1).map(line => split(line));
+  const headers = split(lines[0]);
+  const rows = lines.slice(1).map(split);
   return { headers, rows };
 }
-
-// Find column index for a given key (exact match on header cell)
 function findKeyCol(headers, key) {
   return headers.findIndex(h => String(h).trim().toUpperCase() === String(key).trim().toUpperCase());
 }
+const safe = (s) => String(s ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 
-// Given CA (headers + rows), emulate your VBA lookups and return an object with all outputs.
+// ---------- core logic: port of Chord_File_Major ----------
 function chordFileMajor_JS(key, CA) {
   const { headers, rows } = CA;
   const col = findKeyCol(headers, key);
   if (col < 0) throw new Error(`Key '${key}' not found in CA headers.`);
 
-  // Helper to read "CA.Cells(rowIdx, col)" where your VBA's CA row numbers start at 1.
-  // Our "rows[0]" is the first *data* row under headers, so:
-  // CA row 5 → rows[5 - 5] = rows[0], CA row 6 → rows[1], …
   const CAget = (row1Based, col0Based) => {
-    const r = row1Based - 5; // rows start at VBA row 5 in your code-path
-    const c = col0Based;     // 0-based column within our headers array
+    const r = row1Based - 5; // our first data row corresponds to VBA row 5
+    const c = col0Based;
     if (r < 0 || r >= rows.length) return "";
     if (c < 0 || c >= headers.length) return "";
     return rows[r][c] ?? "";
   };
 
-  // 1) Primary chords (VBA: rows 5..10 → One..Six)
   const One   = CAget(5,  col);
   const Two   = CAget(6,  col);
   const Three = CAget(7,  col);
@@ -47,51 +38,45 @@ function chordFileMajor_JS(key, CA) {
   const Five  = CAget(9,  col);
   const Six   = CAget(10, col);
 
-  // 2) Flats (VBA rows 14,15,17,18)
   const FlatThree = CAget(14, col);
   const FlatFour  = CAget(15, col);
   const FlatSix   = CAget(17, col);
   const FlatSeven = CAget(18, col);
 
-  // 3) Secondary dominants (“FiveOne”..“FiveSix”) from source rows 5..10
-  // VBA loop was 5..11, but only mapped cases 5..10; we’ll mirror the 6 outputs.
-  const headerRoot = headers.map(h => rootToken(h));
+  const headerRoot = CA.headers ? CA.headers.map(h => rootToken(h)) : [];
 
   function twoStep(row1Based) {
     const src = CAget(row1Based, col);
-    const r1 = rootToken(src);
+    const r1  = rootToken(src);
     const matchCol = headerRoot.findIndex(hr => hr === r1);
     if (matchCol < 0) return "";
-
-    // From that matched column, read row 9 (V chord), take its root, append "7"
-    const vChord = CAget(9, matchCol);
+    const vChord = CAget(9, matchCol);     // row 9 holds the V chord in that column
     const vRoot  = rootToken(vChord);
     return vRoot ? (vRoot + "7") : "";
   }
 
-  const FiveOne   = twoStep(5);
-  const FiveTwo   = twoStep(6);
-  const FiveThree = twoStep(7);
-  const FiveFour  = twoStep(8);
-  const FiveFive  = twoStep(9);
-  const FiveSix   = twoStep(10);
-
   return {
     One, Two, Three, Four, Five, Six,
     FlatThree, FlatFour, FlatSix, FlatSeven,
-    FiveOne, FiveTwo, FiveThree, FiveFour, FiveFive, FiveSix
+    FiveOne: twoStep(5),
+    FiveTwo: twoStep(6),
+    FiveThree: twoStep(7),
+    FiveFour: twoStep(8),
+    FiveFive: twoStep(9),
+    FiveSix: twoStep(10)
   };
 }
 
-// ----- UI wiring -----
+// ---------- UI wiring ----------
 const demoCA = `C,D,Eb,E,F,F#,G,Ab,A,Bb,B
-Cmaj,Dmin,Eb?,Fmaj,Fmaj7,F#?,Gmaj,Ab?,A?,Bb?,B?
-Cmin,D?,Eb?,F?,F?,F#?,G?,Ab?,A?,Bb?,B?
-E?,F?,G?,A?,B?,C?,D?,Eb?,F?,G?,A?
-F?,G?,A?,Bb?,C?,D?,E?,F?,G?,A?,B?
-G?,A?,B?,C?,D?,E?,F#?,G?,A?,Bb?,B?
-A?,B?,C?,D?,E?,F#?,G#?,A?,B?,C?,D?
-(…continue your CA rows exactly as in your sheet…)`;
+Cmaj,Dmin,Eb,Fmaj,Dmin,Gmaj,Emin,Ab,Am,Bb,B
+Dmin,Emin,F,Gmin,Amin,B,C,D,Eb,F,G
+Emin,F#,G,Amin,B,C,D,Eb,F,G,A
+F,G,A,Bb,C,D,E,F,G,A,B
+G,A,B,C,D,E,F#,G,A,Bb,B
+A,B,C#,D,E,F#,G#,A,B,C#,D
+Bb,C,D,Eb,F,G,A,Bb,C,D,E
+(…paste your real grid here; first data row should correspond to VBA row 5…)`;
 
 window.addEventListener('DOMContentLoaded', () => {
   const caInput = document.getElementById('caInput');
@@ -102,53 +87,104 @@ window.addEventListener('DOMContentLoaded', () => {
     try {
       const CA = parseTable(caInput.value);
       const out = chordFileMajor_JS(key, CA);
-      renderResults(out);
+      paintBands(out);
+      drawAllArrows();
     } catch (err) {
-      renderError(err.message || String(err));
+      alert(err.message || String(err));
     }
   });
+
+  // run once for demo
+  document.getElementById('runBtn').click();
 });
 
-function renderResults(o) {
-  const el = document.getElementById('results');
-  el.style.display = 'block';
-  const secdom = [ ['V/ I', o.FiveOne], ['V/ ii', o.FiveTwo], ['V/ iii', o.FiveThree],
-                   ['V/ IV', o.FiveFour], ['V/ V', o.FiveFive], ['V/ vi', o.FiveSix] ];
-  el.innerHTML = `
-    <h2>Results</h2>
-
-    <div class="card">
-      <div class="grid">
-        <div><strong>I</strong> <span class="badge">${safe(o.One)}</span></div>
-        <div><strong>ii</strong> <span class="badge">${safe(o.Two)}</span></div>
-        <div><strong>iii</strong> <span class="badge">${safe(o.Three)}</span></div>
-        <div><strong>IV</strong> <span class="badge">${safe(o.Four)}</span></div>
-        <div><strong>V</strong> <span class="badge">${safe(o.Five)}</span></div>
-        <div><strong>vi</strong> <span class="badge">${safe(o.Six)}</span></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3>Secondary Dominants</h3>
-      <div class="grid">
-        ${secdom.map(([lab,val]) => `<div><strong>${lab}</strong> <span class="badge">${safe(val)}</span></div>`).join('')}
-      </div>
-    </div>
-
-    <div class="card">
-      <h3>Modal Interchange</h3>
-      <div class="grid">
-        <div><strong>♭III</strong> <span class="badge">${safe(o.FlatThree)}</span></div>
-        <div><strong>♭IV</strong>  <span class="badge">${safe(o.FlatFour)}</span></div>
-        <div><strong>♭VI</strong>  <span class="badge">${safe(o.FlatSix)}</span></div>
-        <div><strong>♭VII</strong> <span class="badge">${safe(o.FlatSeven)}</span></div>
-      </div>
-    </div>
-  `;
+// Fill the slots inside each band
+function paintBands(o) {
+  document.querySelectorAll('[data-slot]').forEach(el => {
+    const k = el.getAttribute('data-slot');
+    el.textContent = safe(o[k] ?? '');
+  });
 }
-function renderError(msg) {
-  const el = document.getElementById('results');
-  el.style.display = 'block';
-  el.innerHTML = `<h2>Error</h2><p>${safe(msg)}</p>`;
+
+// ---------- Arrow drawing ----------
+function centerBottom(el, rel) {
+  const a = el.getBoundingClientRect();
+  const b = rel.getBoundingClientRect();
+  return { x: a.left + a.width/2 - b.left, y: a.bottom - b.top };
 }
-function safe(s) { return String(s ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+function centerTop(el, rel) {
+  const a = el.getBoundingClientRect();
+  const b = rel.getBoundingClientRect();
+  return { x: a.left + a.width/2 - b.left, y: a.top - b.top };
+}
+function arrow(svg, p1, p2, opts={}) {
+  const { doubleHead=false, dashed=false, bend=0 } = opts;
+  const ns = 'http://www.w3.org/2000/svg';
+
+  // marker
+  if (!svg.querySelector('#arrowHead')) {
+    const defs = document.createElementNS(ns,'defs');
+    const m = document.createElementNS(ns,'marker');
+    m.setAttribute('id','arrowHead');
+    m.setAttribute('markerWidth','10'); m.setAttribute('markerHeight','8');
+    m.setAttribute('refX','9'); m.setAttribute('refY','4');
+    m.setAttribute('orient','auto');
+    const path = document.createElementNS(ns,'path');
+    path.setAttribute('d','M0,0 L10,4 L0,8 Z'); path.setAttribute('fill','#1f5fd1');
+    m.appendChild(path); defs.appendChild(m); svg.appendChild(defs);
+  }
+
+  const path = document.createElementNS(ns,'path');
+  const midY = (p1.y + p2.y)/2 + bend;
+  const d = `M ${p1.x},${p1.y} C ${p1.x},${midY} ${p2.x},${midY} ${p2.x},${p2.y}`;
+  path.setAttribute('d', d);
+  path.setAttribute('fill','none');
+  path.setAttribute('stroke','#1f5fd1');
+  path.setAttribute('stroke-width','2.5');
+  if (dashed) path.setAttribute('stroke-dasharray','6 6');
+  path.setAttribute('marker-end','url(#arrowHead)');
+  if (doubleHead) path.setAttribute('marker-start','url(#arrowHead)');
+  svg.appendChild(path);
+}
+
+function drawAllArrows() {
+  const container = document.getElementById('diagram');
+  const svg = document.getElementById('wires');
+  // size SVG to container
+  const r = container.getBoundingClientRect();
+  svg.setAttribute('width', r.width);
+  svg.setAttribute('height', container.scrollHeight);
+
+  // clear previous
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+  // ensure marker defs persist
+  // (arrow() will recreate as needed)
+
+  // 1) SecDom → Main (down arrows)
+  const pairs = [
+    ['sec-I','main-I'],
+    ['sec-ii','main-ii'],
+    ['sec-iii','main-iii'],
+    ['sec-IV','main-IV'],
+    ['sec-V','main-V'],
+    ['sec-vi','main-vi'],
+  ];
+  pairs.forEach(([a,b])=>{
+    arrow(svg, centerBottom(document.getElementById(a), container),
+               centerTop(document.getElementById(b), container),
+               { bend: 10 });
+  });
+
+  // 2) Main (I, IV, V) ↔ Modal (♭III, ♭VI, iv, ♭VII) double-ended
+  const mains = ['main-I','main-IV','main-V'];
+  const mods  = ['mod-bIII','mod-bVI','mod-iv','mod-bVII'];
+  mains.forEach(m=>{
+    mods.forEach(md=>{
+      arrow(svg,
+        centerBottom(document.getElementById(m), container),
+        centerTop(document.getElementById(md), container),
+        { doubleHead:true, bend: 20 });
+    });
+  });
+}

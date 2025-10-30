@@ -77,50 +77,48 @@ button:active { transform: translateY(1px) }
     </div>
   </section>
 
-  <!-- Diagram -->
-  <section id="diagram" class="diagram">
-    <!-- arrows layer -->
-    <svg id="wires"></svg>
-
-    <!-- BAND 1: Secondary Dominants -->
-    <div id="band-sec" class="band dashed">
-      <h3>Secondary Dominants</h3>
-      <div class="grid grid-6">
-        <div class="pill" id="sec-I"><span class="roman">V/ I</span><span data-slot="FiveOne">—</span></div>
-        <div class="pill" id="sec-ii"><span class="roman">V/ ii</span><span data-slot="FiveTwo">—</span></div>
-        <div class="pill" id="sec-iii"><span class="roman">V/ iii</span><span data-slot="FiveThree">—</span></div>
-        <div class="pill" id="sec-IV"><span class="roman">V/ IV</span><span data-slot="FiveFour">—</span></div>
-        <div class="pill" id="sec-V"><span class="roman">V/ V</span><span data-slot="FiveFive">—</span></div>
-        <div class="pill" id="sec-vi"><span class="roman">V/ vi</span><span data-slot="FiveSix">—</span></div>
-      </div>
-      <div class="helper small" style="right:10px; top:10px;">Up to any chord</div>
+<!-- Diagram -->
+<section id="diagram" class="diagram">
+  <!-- BAND 1: Secondary Dominants -->
+  <div id="band-sec" class="band dashed">
+    <h3>Secondary Dominants</h3>
+    <div class="grid grid-6">
+      <div class="pill" id="sec-I"><span class="roman">V/ I</span><span data-slot="FiveOne">—</span></div>
+      <div class="pill" id="sec-ii"><span class="roman">V/ ii</span><span data-slot="FiveTwo">—</span></div>
+      <div class="pill" id="sec-iii"><span class="roman">V/ iii</span><span data-slot="FiveThree">—</span></div>
+      <div class="pill" id="sec-IV"><span class="roman">V/ IV</span><span data-slot="FiveFour">—</span></div>
+      <div class="pill" id="sec-V"><span class="roman">V/ V</span><span data-slot="FiveFive">—</span></div>
+      <div class="pill" id="sec-vi"><span class="roman">V/ vi</span><span data-slot="FiveSix">—</span></div>
     </div>
+    <div class="helper small" style="right:10px; top:10px;">Up to any chord</div>
+  </div>
 
-    <!-- BAND 2: Main Chords -->
-    <div id="band-main" class="band">
-      <h3>Main Chords</h3>
-      <div class="grid grid-6">
-        <div class="box" id="main-I"><span class="roman">I</span><span data-slot="One">—</span></div>
-        <div class="box" id="main-vi"><span class="roman">vi</span><span data-slot="Six">—</span></div>
-        <div class="box" id="main-IV"><span class="roman">IV</span><span data-slot="Four">—</span></div>
-        <div class="box" id="main-ii"><span class="roman">ii</span><span data-slot="Two">—</span></div>
-        <div class="box" id="main-V"><span class="roman">V</span><span data-slot="Five">—</span></div>
-        <div class="box" id="main-iii"><span class="roman">iii</span><span data-slot="Three">—</span></div>
-      </div>
+  <!-- BAND 2: Main Chords -->
+  <div id="band-main" class="band">
+    <h3>Main Chords</h3>
+    <div class="grid grid-6">
+      <div class="box" id="main-I"><span class="roman">I</span><span data-slot="One">—</span></div>
+      <div class="box" id="main-ii"><span class="roman">ii</span><span data-slot="Two">—</span></div>
+      <div class="box" id="main-iii"><span class="roman">iii</span><span data-slot="Three">—</span></div>
+      <div class="box" id="main-IV"><span class="roman">IV</span><span data-slot="Four">—</span></div>
+      <div class="box" id="main-V"><span class="roman">V</span><span data-slot="Five">—</span></div>
+      <div class="box" id="main-vi"><span class="roman">vi</span><span data-slot="Six">—</span></div>
     </div>
+  </div>
 
-    <!-- BAND 3: Modal Interchange -->
-    <div id="band-modal" class="band">
-      <h3>Modal Interchange</h3>
-      <div class="grid grid-4">
-        <div class="box" id="mod-bIII"><span class="roman">♭III</span><span data-slot="FlatThree">—</span></div>
-        <div class="box" id="mod-bVI"><span class="roman">♭VI</span><span data-slot="FlatSix">—</span></div>
-        <div class="box" id="mod-iv"><span class="roman">iv</span><span data-slot="FlatFour">—</span></div>
-        <div class="box" id="mod-bVII"><span class="roman">♭VII</span><span data-slot="FlatSeven">—</span></div>
-      </div>
-      <div class="helper" id="mix-helper" style="left:10px; top:-14px;">Up to any 3, down to any 4</div>
+  <!-- BAND 3: Modal Interchange -->
+  <div id="band-modal" class="band">
+    <h3>Modal Interchange</h3>
+    <div class="grid grid-4">
+      <div class="box" id="mod-bIII"><span class="roman">♭III</span><span data-slot="FlatThree">—</span></div>
+      <div class="box" id="mod-iv"><span class="roman">iv</span><span data-slot="FlatFour">—</span></div>
+      <div class="box" id="mod-bVI"><span class="roman">♭VI</span><span data-slot="FlatSix">—</span></div>
+      <div class="box" id="mod-bVII"><span class="roman">♭VII</span><span data-slot="FlatSeven">—</span></div>
     </div>
-  </section>
+    <div class="helper" id="mix-helper" style="left:10px; top:-14px;">Up to any 3, down to any 4</div>
+  </div>
+</section>
+
 
   <script src="app.js"></script>
   <script>
@@ -130,4 +128,5 @@ button:active { transform: translateY(1px) }
   </script>
 </body>
 </html>
+
 

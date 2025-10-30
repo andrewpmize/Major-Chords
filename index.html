@@ -7,18 +7,37 @@
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#0b0f19" />
   <style>
-    body { font-family: system-ui, Arial, sans-serif; margin: 1rem; max-width: 800px }
-    header { display:flex; align-items:center; gap:.75rem; margin-bottom:1rem }
+    :root { --card:#eef3ff; --ink:#0b0f19; --line:#1f5fd1; --dash:#80a8ff; }
+    body { font-family: system-ui, Arial, sans-serif; margin: 16px; color: var(--ink); }
+    header { margin-bottom: 12px }
+    h1 { margin: 0 0 6px 0 }
+    .panel { border:1px solid #dbe3ff; border-radius:14px; padding:14px; background: #fff }
+    .controls .row { display:grid; grid-template-columns: 140px 1fr; gap:.5rem; margin:.5rem 0 }
     textarea { width:100%; min-height:120px }
-    .row { display:grid; grid-template-columns: 120px 1fr; gap:.5rem; margin:.25rem 0 }
-    .card { border:1px solid #e3e6ef; border-radius:12px; padding:1rem; margin:1rem 0 }
-    h2 { margin:.25rem 0 }
-    code { background:#f6f8ff; padding:.1rem .3rem; border-radius:6px }
-    button { padding:.6rem 1rem; border-radius:8px; border:1px solid #c9d1e6; background:#fff; }
-    button:active { transform: translateY(1px); }
-    input, select { padding:.5rem .6rem; border:1px solid #c9d1e6; border-radius:8px; width:100% }
-    .grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(140px,1fr)); gap:.5rem }
-    .badge { display:inline-block; padding:.25rem .5rem; border:1px solid #d4d9ea; border-radius:999px; font-size:.9rem; }
+    input, button, textarea { border:1px solid #c9d1e6; border-radius:10px; padding:.6rem .7rem; font:inherit }
+    button { background:#fff; cursor:pointer }
+    button:active { transform: translateY(1px) }
+
+    /* Diagram bands */
+    .diagram { position: relative; margin-top: 16px }
+    .band { border:2px solid var(--line); border-radius:16px; padding:16px; background:#fff; }
+    .band.dashed { border-style: dashed; border-color: var(--dash) }
+    .band + .band { margin-top: 16px }
+    .band h3{ margin:0 0 10px 0 }
+    .grid { display:grid; grid-template-columns: repeat(6, minmax(90px,1fr)); gap:8px; align-items:center }
+    .grid-4 { grid-template-columns: repeat(4, minmax(90px,1fr)); }
+    .pill { display:flex; justify-content:center; align-items:center; height:42px;
+            border:1.5px solid #d4d9ea; border-radius:999px; background:#fff; }
+    .label { display:block; font-weight:600; margin-bottom:6px }
+    .roman { font-weight:700; margin-right:6px }
+    .box { display:flex; justify-content:center; align-items:center; height:40px; padding:0 10px;
+           border:1.5px solid #1f5fd1; border-radius:6px; background:#fff; }
+    .helper { position:absolute; font-size:.9rem; background:#fff; padding:4px 8px; border-radius:8px;
+              border:1px solid #c9d1e6; }
+    .helper.small { font-size:.8rem; }
+
+    /* SVG overlay sits on top of the bands for arrows */
+    #wires { position:absolute; inset:0; pointer-events:none; }
   </style>
 </head>
 <body>
@@ -26,23 +45,67 @@
     <h1>Chord Analyzer (Major)</h1>
   </header>
 
-  <div class="card">
-    <h2>Key</h2>
+  <section class="controls panel">
     <div class="row">
       <label for="key">Key (must exist in headers):</label>
       <input id="key" placeholder="C, G, F#, Bb, …" value="C" />
     </div>
     <div class="row">
-      <label>CA table (paste or keep demo):<br><small>Headers on first line; rows like your “Chords Analyzer” sheet.</small></label>
+      <label for="caInput">CA table (paste or keep demo):<br>
+        <small>Headers on first line; rows like your “Chords Analyzer” sheet.</small>
+      </label>
       <textarea id="caInput" spellcheck="false"></textarea>
     </div>
     <div class="row">
-      <label></label>
+      <span></span>
       <button id="runBtn">Run</button>
     </div>
-  </div>
+  </section>
 
-  <div id="results" class="card" style="display:none"></div>
+  <!-- Diagram -->
+  <section id="diagram" class="diagram">
+    <!-- arrows layer -->
+    <svg id="wires"></svg>
+
+    <!-- BAND 1: Secondary Dominants -->
+    <div id="band-sec" class="band dashed">
+      <h3>Secondary Dominants</h3>
+      <div class="grid">
+        <div class="pill" id="sec-I"><span class="roman">V/ I</span><span data-slot="FiveOne">—</span></div>
+        <div class="pill" id="sec-ii"><span class="roman">V/ ii</span><span data-slot="FiveTwo">—</span></div>
+        <div class="pill" id="sec-iii"><span class="roman">V/ iii</span><span data-slot="FiveThree">—</span></div>
+        <div class="pill" id="sec-IV"><span class="roman">V/ IV</span><span data-slot="FiveFour">—</span></div>
+        <div class="pill" id="sec-V"><span class="roman">V/ V</span><span data-slot="FiveFive">—</span></div>
+        <div class="pill" id="sec-vi"><span class="roman">V/ vi</span><span data-slot="FiveSix">—</span></div>
+      </div>
+      <div class="helper small" style="right:10px; top:10px;">Up to any chord</div>
+    </div>
+
+    <!-- BAND 2: Main Chords -->
+    <div id="band-main" class="band">
+      <h3>Main Chords</h3>
+      <div class="grid">
+        <div class="box" id="main-I"><span class="roman">I</span><span data-slot="One">—</span></div>
+        <div class="box" id="main-vi"><span class="roman">vi</span><span data-slot="Six">—</span></div>
+        <div class="box" id="main-IV"><span class="roman">IV</span><span data-slot="Four">—</span></div>
+        <div class="box" id="main-ii"><span class="roman">ii</span><span data-slot="Two">—</span></div>
+        <div class="box" id="main-V"><span class="roman">V</span><span data-slot="Five">—</span></div>
+        <div class="box" id="main-iii"><span class="roman">iii</span><span data-slot="Three">—</span></div>
+      </div>
+    </div>
+
+    <!-- BAND 3: Modal Interchange -->
+    <div id="band-modal" class="band">
+      <h3>Modal Interchange</h3>
+      <div class="grid grid-4">
+        <div class="box" id="mod-bIII"><span class="roman">♭III</span><span data-slot="FlatThree">—</span></div>
+        <div class="box" id="mod-bVI"><span class="roman">♭VI</span><span data-slot="FlatSix">—</span></div>
+        <div class="box" id="mod-iv"><span class="roman">iv</span><span data-slot="FlatFour">—</span></div>
+        <div class="box" id="mod-bVII"><span class="roman">♭VII</span><span data-slot="FlatSeven">—</span></div>
+      </div>
+      <div class="helper" id="mix-helper" style="left:10px; top:-14px;">Up to any 3, down to any 4</div>
+    </div>
+  </section>
 
   <script src="app.js"></script>
   <script>

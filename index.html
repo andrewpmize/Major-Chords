@@ -7,37 +7,52 @@
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#0b0f19" />
   <style>
-    :root { --card:#eef3ff; --ink:#0b0f19; --line:#1f5fd1; --dash:#80a8ff; }
-    body { font-family: system-ui, Arial, sans-serif; margin: 16px; color: var(--ink); }
-    header { margin-bottom: 12px }
-    h1 { margin: 0 0 6px 0 }
-    .panel { border:1px solid #dbe3ff; border-radius:14px; padding:14px; background: #fff }
-    .controls .row { display:grid; grid-template-columns: 140px 1fr; gap:.5rem; margin:.5rem 0 }
-    textarea { width:100%; min-height:120px }
-    input, button, textarea { border:1px solid #c9d1e6; border-radius:10px; padding:.6rem .7rem; font:inherit }
-    button { background:#fff; cursor:pointer }
-    button:active { transform: translateY(1px) }
+:root { --card:#eef3ff; --ink:#0b0f19; --line:#1f5fd1; --dash:#80a8ff; }
+body { font-family: system-ui, Arial, sans-serif; margin:12px; color:var(--ink); }
+header { margin-bottom:8px }
+h1 { margin:0 0 4px 0; font-size:1.15rem }
 
-    /* Diagram bands */
-    .diagram { position: relative; margin-top: 16px }
-    .band { border:2px solid var(--line); border-radius:16px; padding:16px; background:#fff; }
-    .band.dashed { border-style: dashed; border-color: var(--dash) }
-    .band + .band { margin-top: 16px }
-    .band h3{ margin:0 0 10px 0 }
-    .grid { display:grid; grid-template-columns: repeat(6, minmax(90px,1fr)); gap:8px; align-items:center }
-    .grid-4 { grid-template-columns: repeat(4, minmax(90px,1fr)); }
-    .pill { display:flex; justify-content:center; align-items:center; height:42px;
-            border:1.5px solid #d4d9ea; border-radius:999px; background:#fff; }
-    .label { display:block; font-weight:600; margin-bottom:6px }
-    .roman { font-weight:700; margin-right:6px }
-    .box { display:flex; justify-content:center; align-items:center; height:40px; padding:0 10px;
-           border:1.5px solid #1f5fd1; border-radius:6px; background:#fff; }
-    .helper { position:absolute; font-size:.9rem; background:#fff; padding:4px 8px; border-radius:8px;
-              border:1px solid #c9d1e6; }
-    .helper.small { font-size:.8rem; }
+/* controls */
+.panel { border:1px solid #dbe3ff; border-radius:12px; padding:10px; background:#fff }
+.controls .row { display:grid; grid-template-columns:135px 1fr; gap:.4rem; margin:.35rem 0 }
+input, button, textarea { border:1px solid #c9d1e6; border-radius:8px; padding:.45rem .55rem; font:inherit }
+textarea { width:100%; min-height:90px }
+button { background:#fff; cursor:pointer }
+button:active { transform: translateY(1px) }
 
-    /* SVG overlay sits on top of the bands for arrows */
-    #wires { position:absolute; inset:0; pointer-events:none; }
+/* diagram bands */
+.diagram { position:relative; margin-top:12px }
+.band { border:2px solid var(--line); border-radius:14px; padding:10px; background:#fff }
+.band.dashed { border-style:dashed; border-color:var(--dash) }
+.band + .band { margin-top:10px }
+.band h3 { margin:0 0 6px 0; font-size:1rem }
+
+/* grids – keep everything on one row */
+.grid { display:grid; gap:6px; align-items:center }
+.grid-6 { grid-template-columns: repeat(6, minmax(72px, 1fr)); }
+.grid-4 { grid-template-columns: repeat(4, minmax(88px, 1fr)); }
+
+/* tighter pills/boxes */
+.pill, .box {
+  display:inline-flex; justify-content:center; align-items:center;
+  height:34px; padding:0 8px; border:1.5px solid #d4d9ea; border-radius:8px;
+  background:#fff; white-space:nowrap; line-height:1; font-size:.95rem;
+}
+.box { border-color:#1f5fd1 }
+
+.roman { font-weight:700; margin-right:4px }
+.helper { position:absolute; font-size:.75rem; background:#fff; padding:3px 6px; border-radius:6px;
+          border:1px solid #c9d1e6 }
+.helper.small { font-size:.7rem }
+
+/* SVG arrows */
+#wires { position:absolute; inset:0; pointer-events:none }
+
+/* keep 6-up on tablets/desktop; only wrap on very narrow phones */
+@media (max-width: 420px) {
+  .grid-6 { grid-template-columns: repeat(3, 1fr); }  /* 2 rows of 3 if super narrow */
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
   </style>
 </head>
 <body>
@@ -70,7 +85,7 @@
     <!-- BAND 1: Secondary Dominants -->
     <div id="band-sec" class="band dashed">
       <h3>Secondary Dominants</h3>
-      <div class="grid">
+      <div class="grid grid-6">
         <div class="pill" id="sec-I"><span class="roman">V/ I</span><span data-slot="FiveOne">—</span></div>
         <div class="pill" id="sec-ii"><span class="roman">V/ ii</span><span data-slot="FiveTwo">—</span></div>
         <div class="pill" id="sec-iii"><span class="roman">V/ iii</span><span data-slot="FiveThree">—</span></div>
@@ -84,7 +99,7 @@
     <!-- BAND 2: Main Chords -->
     <div id="band-main" class="band">
       <h3>Main Chords</h3>
-      <div class="grid">
+      <div class="grid grid-6">
         <div class="box" id="main-I"><span class="roman">I</span><span data-slot="One">—</span></div>
         <div class="box" id="main-vi"><span class="roman">vi</span><span data-slot="Six">—</span></div>
         <div class="box" id="main-IV"><span class="roman">IV</span><span data-slot="Four">—</span></div>
@@ -115,3 +130,4 @@
   </script>
 </body>
 </html>
+

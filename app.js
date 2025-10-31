@@ -43,8 +43,7 @@ function chordFileMajor_JS(key, CA) {
   const FlatSix   = CAget(17, col);
   const FlatSeven = CAget(18, col);
 
-  // build array of header root tokens once
-  const headerRoot = headers.map(h => rootToken(h));
+  const headerRoot = CA.headers ? CA.headers.map(h => rootToken(h)) : headers.map(h => rootToken(h));
 
   function twoStep(row1Based) {
     const src = CAget(row1Based, col);
@@ -68,8 +67,32 @@ function chordFileMajor_JS(key, CA) {
   };
 }
 
-// ---------- UI wiring ----------
-const demoCA = `C,D,Eb,E,F,F#,G,Ab,A,Bb,B
+// ---------- built-in CA grid (demo / default) ----------
+const DEMO_GRID = `C,D,Eb,E,F,F#,G,Ab,A,Bb,B
 Cmaj,Dmin,Eb,Fmaj,Dmin,Gmaj,Emin,Ab,Am,Bb,B
 Dmin,Emin,F,Gmin,Amin,B,C,D,Eb,F,G
-E
+Emin,F#,G,Amin,B,C,D,Eb,F,G,A
+F,G,A,Bb,C,D,E,F,G,A,B
+G,A,B,C,D,E,F#,G,A,Bb,B
+A,B,C#,D,E,F#,G#,A,B,C#,D
+Bb,C,D,Eb,F,G,A,Bb,C,D,E`;
+
+// ---------- UI wiring ----------
+window.addEventListener('DOMContentLoaded', () => {
+  const run = () => {
+    const key = document.getElementById('key').value;
+    const CA  = parseTable(DEMO_GRID);
+    const out = chordFileMajor_JS(key, CA);
+    paintBands(out);
+  };
+  document.getElementById('runBtn').addEventListener('click', run);
+  run(); // populate once on load
+});
+
+// Fill the slots inside each band
+function paintBands(o) {
+  document.querySelectorAll('[data-slot]').forEach(el => {
+    const k = el.getAttribute('data-slot');
+    el.textContent = safe(o[k] ?? '');
+  });
+}

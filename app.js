@@ -84,6 +84,7 @@ F min,G min,A min,Bb min,C min,D min,E min,F# min,G# min,B min,C# min,Eb min
 Ab maj,Bb maj,C maj,Db maj,Eb maj,F maj,G maj,A maj,B maj,D maj,E maj,Gb maj
 Bb maj,C maj,D maj,Eb maj,F maj,G maj,A maj,B maj,C# maj,E maj,F# maj,Ab maj`;
 
+
 // ---------- UI wiring ----------
 window.addEventListener('DOMContentLoaded', () => {
   const run = () => {
@@ -103,4 +104,5 @@ function paintBands(o) {
     el.textContent = safe(o[k] ?? '');
   });
 }
+
 

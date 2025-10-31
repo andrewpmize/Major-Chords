@@ -15,8 +15,7 @@ h1 { margin:0 0 4px 0; font-size:1.15rem }
 /* controls */
 .panel { border:1px solid #dbe3ff; border-radius:12px; padding:10px; background:#fff }
 .controls .row { display:grid; grid-template-columns:135px 1fr; gap:.4rem; margin:.35rem 0 }
-input, button, textarea { border:1px solid #c9d1e6; border-radius:8px; padding:.45rem .55rem; font:inherit }
-textarea { width:100%; min-height:90px }
+input, button { border:1px solid #c9d1e6; border-radius:8px; padding:.45rem .55rem; font:inherit }
 button { background:#fff; cursor:pointer }
 button:active { transform: translateY(1px) }
 
@@ -45,12 +44,8 @@ button:active { transform: translateY(1px) }
           border:1px solid #c9d1e6 }
 .helper.small { font-size:.7rem }
 
-/* SVG arrows */
-#wires { position:absolute; inset:0; pointer-events:none }
-
-/* keep 6-up on tablets/desktop; only wrap on very narrow phones */
 @media (max-width: 420px) {
-  .grid-6 { grid-template-columns: repeat(3, 1fr); }  /* 2 rows of 3 if super narrow */
+  .grid-6 { grid-template-columns: repeat(3, 1fr); }
   .grid-4 { grid-template-columns: repeat(2, 1fr); }
 }
   </style>
@@ -62,14 +57,8 @@ button:active { transform: translateY(1px) }
 
   <section class="controls panel">
     <div class="row">
-      <label for="key">Key (must exist in headers):</label>
+      <label for="key">Key:</label>
       <input id="key" placeholder="C, G, F#, Bb, …" value="C" />
-    </div>
-    <div class="row">
-      <label for="caInput">CA table (paste or keep demo):<br>
-        <small>Headers on first line; rows like your “Chords Analyzer” sheet.</small>
-      </label>
-      <textarea id="caInput" spellcheck="false"></textarea>
     </div>
     <div class="row">
       <span></span>
@@ -77,48 +66,46 @@ button:active { transform: translateY(1px) }
     </div>
   </section>
 
-<!-- Diagram -->
-<section id="diagram" class="diagram">
-  <!-- BAND 1: Secondary Dominants -->
-  <div id="band-sec" class="band dashed">
-    <h3>Secondary Dominants</h3>
-    <div class="grid grid-6">
-      <div class="pill" id="sec-I"><span class="roman">V/ I</span><span data-slot="FiveOne">—</span></div>
-      <div class="pill" id="sec-ii"><span class="roman">V/ ii</span><span data-slot="FiveTwo">—</span></div>
-      <div class="pill" id="sec-iii"><span class="roman">V/ iii</span><span data-slot="FiveThree">—</span></div>
-      <div class="pill" id="sec-IV"><span class="roman">V/ IV</span><span data-slot="FiveFour">—</span></div>
-      <div class="pill" id="sec-V"><span class="roman">V/ V</span><span data-slot="FiveFive">—</span></div>
-      <div class="pill" id="sec-vi"><span class="roman">V/ vi</span><span data-slot="FiveSix">—</span></div>
-    </div>
-    <div class="helper small" style="right:10px; top:10px;">Up to any chord</div>
-  </div>
+  <!-- Diagram -->
+  <section id="diagram" class="diagram">
 
-  <!-- BAND 2: Main Chords -->
-  <div id="band-main" class="band">
-    <h3>Main Chords</h3>
-    <div class="grid grid-6">
-      <div class="box" id="main-I"><span class="roman">I</span><span data-slot="One">—</span></div>
-      <div class="box" id="main-ii"><span class="roman">ii</span><span data-slot="Two">—</span></div>
-      <div class="box" id="main-iii"><span class="roman">iii</span><span data-slot="Three">—</span></div>
-      <div class="box" id="main-IV"><span class="roman">IV</span><span data-slot="Four">—</span></div>
-      <div class="box" id="main-V"><span class="roman">V</span><span data-slot="Five">—</span></div>
-      <div class="box" id="main-vi"><span class="roman">vi</span><span data-slot="Six">—</span></div>
+    <!-- BAND 1: Secondary Dominants -->
+    <div id="band-sec" class="band dashed">
+      <h3>Secondary Dominants</h3>
+      <div class="grid grid-6">
+        <div class="pill"><span class="roman">V/ I</span><span data-slot="FiveOne">—</span></div>
+        <div class="pill"><span class="roman">V/ ii</span><span data-slot="FiveTwo">—</span></div>
+        <div class="pill"><span class="roman">V/ iii</span><span data-slot="FiveThree">—</span></div>
+        <div class="pill"><span class="roman">V/ IV</span><span data-slot="FiveFour">—</span></div>
+        <div class="pill"><span class="roman">V/ V</span><span data-slot="FiveFive">—</span></div>
+        <div class="pill"><span class="roman">V/ vi</span><span data-slot="FiveSix">—</span></div>
+      </div>
     </div>
-  </div>
 
-  <!-- BAND 3: Modal Interchange -->
-  <div id="band-modal" class="band">
-    <h3>Modal Interchange</h3>
-    <div class="grid grid-4">
-      <div class="box" id="mod-bIII"><span class="roman">♭III</span><span data-slot="FlatThree">—</span></div>
-      <div class="box" id="mod-iv"><span class="roman">iv</span><span data-slot="FlatFour">—</span></div>
-      <div class="box" id="mod-bVI"><span class="roman">♭VI</span><span data-slot="FlatSix">—</span></div>
-      <div class="box" id="mod-bVII"><span class="roman">♭VII</span><span data-slot="FlatSeven">—</span></div>
+    <!-- BAND 2: Main Chords -->
+    <div id="band-main" class="band">
+      <h3>Main Chords</h3>
+      <div class="grid grid-6">
+        <div class="box"><span class="roman">I</span><span data-slot="One">—</span></div>
+        <div class="box"><span class="roman">ii</span><span data-slot="Two">—</span></div>
+        <div class="box"><span class="roman">iii</span><span data-slot="Three">—</span></div>
+        <div class="box"><span class="roman">IV</span><span data-slot="Four">—</span></div>
+        <div class="box"><span class="roman">V</span><span data-slot="Five">—</span></div>
+        <div class="box"><span class="roman">vi</span><span data-slot="Six">—</span></div>
+      </div>
     </div>
-    <div class="helper" id="mix-helper" style="left:10px; top:-14px;">Up to any 3, down to any 4</div>
-  </div>
-</section>
 
+    <!-- BAND 3: Modal Interchange -->
+    <div id="band-modal" class="band">
+      <h3>Modal Interchange</h3>
+      <div class="grid grid-4">
+        <div class="box"><span class="roman">♭III</span><span data-slot="FlatThree">—</span></div>
+        <div class="box"><span class="roman">iv</span><span data-slot="FlatFour">—</span></div>
+        <div class="box"><span class="roman">♭VI</span><span data-slot="FlatSix">—</span></div>
+        <div class="box"><span class="roman">♭VII</span><span data-slot="FlatSeven">—</span></div>
+      </div>
+    </div>
+  </section>
 
   <script src="app.js"></script>
   <script>
@@ -128,5 +115,3 @@ button:active { transform: translateY(1px) }
   </script>
 </body>
 </html>
-
-

@@ -68,14 +68,21 @@ function chordFileMajor_JS(key, CA) {
 }
 
 // ---------- built-in CA grid (demo / default) ----------
-const DEMO_GRID = `C,D,Eb,E,F,F#,G,Ab,A,Bb,B
-Cmaj,Dmin,Eb,Fmaj,Dmin,Gmaj,Emin,Ab,Am,Bb,B
-Dmin,Emin,F,Gmin,Amin,B,C,D,Eb,F,G
-Emin,F#,G,Amin,B,C,D,Eb,F,G,A
-F,G,A,Bb,C,D,E,F,G,A,B
-G,A,B,C,D,E,F#,G,A,Bb,B
-A,B,C#,D,E,F#,G#,A,B,C#,D
-Bb,C,D,Eb,F,G,A,Bb,C,D,E`;
+const DEMO_GRID = `C,D,E,F,G,A,B,C#,D#,F#,G#,Bb
+C maj,D maj,E maj,F maj,G maj,A maj,B maj,C# maj,D# maj,F# maj,G# maj,Bb maj
+D min,E min,F# min,G min,A min,B min,C# min,D# min,F min,G# min,A# min,C min
+E min,F# min,G# min,A min,B min,C# min,D# min,F min,G min,A# min,C min,D min
+F maj,G maj,A maj,Bb maj,C maj,D maj,E maj,F# maj,G# maj,B maj,C# maj,Eb maj
+G maj,A maj,B maj,C maj,D maj,E maj,F# maj,G# maj,A# maj,C# maj,D# maj,F maj
+A min,B min,C# min,D min,E min,F# min,G# min,A# min,C min,D# min,F min,G min
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+Eb maj,F maj,G maj,Ab maj,Bb maj,C maj,D maj,E maj,F# maj,A maj,B maj,Db maj
+F min,G min,A min,Bb min,C min,D min,E min,F# min,G# min,B min,C# min,Eb min
+,,,,,,,,,,,,
+Ab maj,Bb maj,C maj,Db maj,Eb maj,F maj,G maj,A maj,B maj,D maj,E maj,Gb maj
+Bb maj,C maj,D maj,Eb maj,F maj,G maj,A maj,B maj,C# maj,E maj,F# maj,Ab maj`;
 
 // ---------- UI wiring ----------
 window.addEventListener('DOMContentLoaded', () => {
@@ -96,3 +103,4 @@ function paintBands(o) {
     el.textContent = safe(o[k] ?? '');
   });
 }
+

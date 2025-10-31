@@ -1,4 +1,4 @@
-const CACHE = 'chord-analyzer-v10';
+const CACHE = 'chord-analyzer-v11';
 const ASSETS = [
   './',
   './index.html',
@@ -26,6 +26,7 @@ self.addEventListener('fetch', (e) => {
     caches.match(request).then(res => res || fetch(request))
   );
 });
+
 
 
 

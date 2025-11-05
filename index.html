@@ -50,6 +50,21 @@ button:active { transform: translateY(1px) }
   .grid-6 { grid-template-columns: repeat(3, 1fr); }
   .grid-4 { grid-template-columns: repeat(2, 1fr); }
 }
+
+    /* Phones: wrap 7 into 4+3 and tighten spacing */
+@media (max-width: 480px) {
+  .grid-7 { grid-template-columns: repeat(4, minmax(60px, 1fr)); }
+  .pill, .box { height: 30px; padding: 0 6px; font-size: .9rem; }
+  .roman { margin-right: 3px; }
+  .grid { gap: 5px; }
+}
+
+/* Extra-small phones */
+@media (max-width: 360px) {
+  .grid-7 { grid-template-columns: repeat(3, minmax(58px, 1fr)); }
+  .pill, .box { height: 28px; padding: 0 5px; font-size: .85rem; }
+}
+
   </style>
 </head>
 <body>
@@ -135,6 +150,7 @@ button:active { transform: translateY(1px) }
   </script>
 </body>
 </html>
+
 
 
 

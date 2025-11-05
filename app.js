@@ -17,6 +17,33 @@ function findKeyCol(headers, key) {
 }
 const safe = (s) => String(s ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 
+// --- pitch helpers for vii° and V/vii°
+const SHARP_SCALE = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+const FLAT_EQUIV  = { 'A#':'Bb','D#':'Eb','G#':'Ab' }; // minimal enharmonics we need
+const FLAT_KEYS   = new Set(['F','Bb','Eb','Ab','Db','Gb']); // use flats in these keys
+
+function toIndex(root) {
+  const R = root.toUpperCase();
+  const i = SHARP_SCALE.indexOf(R);
+  if (i >= 0) return i;
+  // allow flat inputs (Bb -> A#)
+  if (/^[A-G]b$/.test(R)) {
+    const sharp = Object.keys(FLAT_EQUIV).find(k => FLAT_EQUIV[k] === R);
+    return SHARP_SCALE.indexOf(sharp);
+  }
+  return -1;
+}
+function nameFromIndex(i, preferFlats=false) {
+  let n = SHARP_SCALE[(i+12)%12];
+  if (preferFlats && FLAT_EQUIV[n]) n = FLAT_EQUIV[n];
+  return n;
+}
+function transpose(root, semitones, preferFlats=false) {
+  const i = toIndex(root);
+  return i < 0 ? '' : nameFromIndex(i + semitones, preferFlats);
+}
+
+
 // ---------- core logic: port of Chord_File_Major ----------
 function chordFileMajor_JS(key, CA) {
   const { headers, rows } = CA;
@@ -37,6 +64,12 @@ function chordFileMajor_JS(key, CA) {
   const Four  = CAget(8,  col);
   const Five  = CAget(9,  col);
   const Six   = CAget(10, col);
+ 
+  // --- compute vii° and V/vii° from theory
+  const preferFlats = FLAT_KEYS.has(String(key).replace(/\s+.*$/,''));
+  const sevenRoot   = transpose(key, -1, preferFlats);      // leading tone (−1 semitone)
+  const SevenDim    = sevenRoot ? `${sevenRoot}°` : '';     // vii° triad label
+  const FiveSeven   = sevenRoot ? `${transpose(sevenRoot, 7, preferFlats)}7` : ''; // V of vii°
 
   const FlatThree = CAget(14, col);
   const FlatFour  = CAget(15, col);
@@ -55,16 +88,21 @@ function chordFileMajor_JS(key, CA) {
     return vRoot ? (vRoot + "7") : "";
   }
 
-  return {
-    One, Two, Three, Four, Five, Six,
-    FlatThree, FlatFour, FlatSix, FlatSeven,
-    FiveOne: twoStep(5),
-    FiveTwo: twoStep(6),
-    FiveThree: twoStep(7),
-    FiveFour: twoStep(8),
-    FiveFive: twoStep(9),
-    FiveSix: twoStep(10)
-  };
+ return {
+  One, Two, Three, Four, Five, Six,
+  FlatThree, FlatFour, FlatSix, FlatSeven,
+  FiveOne: twoStep(5),
+  FiveTwo: twoStep(6),
+  FiveThree: twoStep(7),
+  FiveFour: twoStep(8),
+  FiveFive: twoStep(9),
+  FiveSix: twoStep(10),
+
+  // NEW CHORDS:
+  SevenDim,   // this is the vii° chord
+  FiveSeven   // this is the V of vii°
+};
+
 }
 
 // ---------- built-in CA grid (demo / default) ----------
@@ -104,5 +142,6 @@ function paintBands(o) {
     el.textContent = safe(o[k] ?? '');
   });
 }
+
 
 

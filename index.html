@@ -30,6 +30,8 @@ button:active { transform: translateY(1px) }
 .grid { display:grid; gap:6px; align-items:center }
 .grid-6 { grid-template-columns: repeat(6, minmax(72px, 1fr)); }
 .grid-4 { grid-template-columns: repeat(4, minmax(88px, 1fr)); }
+.grid-7 { grid-template-columns: repeat(7, minmax(68px, 1fr)); }
+
 
 /* tighter pills/boxes */
 .pill, .box {
@@ -83,31 +85,35 @@ button:active { transform: translateY(1px) }
   <!-- Diagram -->
   <section id="diagram" class="diagram">
 
-    <!-- BAND 1: Secondary Dominants -->
-    <div id="band-sec" class="band dashed">
-      <h3>Secondary Dominants</h3>
-      <div class="grid grid-6">
-        <div class="pill"><span class="roman">V/ I</span><span data-slot="FiveOne">—</span></div>
-        <div class="pill"><span class="roman">V/ ii</span><span data-slot="FiveTwo">—</span></div>
-        <div class="pill"><span class="roman">V/ iii</span><span data-slot="FiveThree">—</span></div>
-        <div class="pill"><span class="roman">V/ IV</span><span data-slot="FiveFour">—</span></div>
-        <div class="pill"><span class="roman">V/ V</span><span data-slot="FiveFive">—</span></div>
-        <div class="pill"><span class="roman">V/ vi</span><span data-slot="FiveSix">—</span></div>
-      </div>
-    </div>
+   <!-- BAND 1: Secondary Dominants -->
+<div id="band-sec" class="band dashed">
+  <h3>Secondary Dominants</h3>
+  <div class="grid grid-7">
+    <div class="pill"><span class="roman">V/ I</span> <span data-slot="FiveOne">—</span></div>
+    <div class="pill"><span class="roman">V/ ii</span><span data-slot="FiveTwo">—</span></div>
+    <div class="pill"><span class="roman">V/ iii</span><span data-slot="FiveThree">—</span></div>
+    <div class="pill"><span class="roman">V/ IV</span><span data-slot="FiveFour">—</span></div>
+    <div class="pill"><span class="roman">V/ V</span> <span data-slot="FiveFive">—</span></div>
+    <div class="pill"><span class="roman">V/ vi</span><span data-slot="FiveSix">—</span></div>
+    <!-- NEW -->
+    <div class="pill"><span class="roman">V/ vii°</span><span data-slot="FiveSeven">—</span></div>
+  </div>
+</div>
 
-    <!-- BAND 2: Main Chords -->
-    <div id="band-main" class="band">
-      <h3>Main Chords</h3>
-      <div class="grid grid-6">
-        <div class="box"><span class="roman">I</span><span data-slot="One">—</span></div>
-        <div class="box"><span class="roman">ii</span><span data-slot="Two">—</span></div>
-        <div class="box"><span class="roman">iii</span><span data-slot="Three">—</span></div>
-        <div class="box"><span class="roman">IV</span><span data-slot="Four">—</span></div>
-        <div class="box"><span class="roman">V</span><span data-slot="Five">—</span></div>
-        <div class="box"><span class="roman">vi</span><span data-slot="Six">—</span></div>
-      </div>
-    </div>
+<!-- BAND 2: Main Chords -->
+<div id="band-main" class="band">
+  <h3>Main Chords</h3>
+  <div class="grid grid-7">
+    <div class="box"><span class="roman">I</span>   <span data-slot="One">—</span></div>
+    <div class="box"><span class="roman">ii</span>  <span data-slot="Two">—</span></div>
+    <div class="box"><span class="roman">iii</span> <span data-slot="Three">—</span></div>
+    <div class="box"><span class="roman">IV</span>  <span data-slot="Four">—</span></div>
+    <div class="box"><span class="roman">V</span>   <span data-slot="Five">—</span></div>
+    <div class="box"><span class="roman">vi</span>  <span data-slot="Six">—</span></div>
+    <!-- NEW -->
+    <div class="box"><span class="roman">vii°</span><span data-slot="SevenDim">—</span></div>
+  </div>
+</div>
 
     <!-- BAND 3: Modal Interchange -->
     <div id="band-modal" class="band">
@@ -129,5 +135,6 @@ button:active { transform: translateY(1px) }
   </script>
 </body>
 </html>
+
 
 

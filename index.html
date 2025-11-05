@@ -142,6 +142,27 @@ button:active { transform: translateY(1px) }
     </div>
   </section>
 
+  <!-- ===== Song → Possible Keys (inline tool) ===== -->
+<section class="panel" id="song-analyzer" style="margin-top:12px">
+  <h3>Song → Possible Keys</h3>
+  <p style="margin:6px 0 8px">Paste chords separated by spaces (e.g., <code>G D Em C Am D7</code>).</p>
+
+  <div class="controls">
+    <div class="row">
+      <label for="songChords">Chords:</label>
+      <input id="songChords" placeholder="G D Em C Am D7 ..." />
+    </div>
+    <div class="row">
+      <span></span>
+      <button id="analyzeBtn">Analyze</button>
+    </div>
+  </div>
+
+  <div id="keyResults" style="margin-top:10px"></div>
+  <div id="mappingTable" style="margin-top:10px"></div>
+  <div id="progHints" style="margin-top:10px"></div>
+</section>
+
   <script src="app.js?v=12"></script>
   <script>
     if ('serviceWorker' in navigator) {
@@ -150,6 +171,7 @@ button:active { transform: translateY(1px) }
   </script>
 </body>
 </html>
+
 
 
 
